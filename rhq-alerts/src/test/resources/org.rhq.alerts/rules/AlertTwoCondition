@@ -1,0 +1,34 @@
+package org.poc.rules
+
+import org.rhq.alerts.api.common.trigger.Trigger
+import org.rhq.alerts.api.common.condition.ConditionMatch
+import org.rhq.alerts.api.common.condition.ThresholdCondition
+import org.rhq.alerts.api.common.condition.Alert
+import org.rhq.alerts.api.common.data.Metric
+import org.rhq.alerts.api.common.data.State
+import org.rhq.alerts.api.services.NotificationsService
+import java.util.List
+
+global NotificationsService notificationsService
+global List alerts
+global List states
+
+import function org.rhq.alerts.api.common.condition.ThresholdCondition.match;
+
+rule "AlertTwoCondition"
+when
+    $t  : Trigger( active == true, $tid : id )
+    $cm1 : ConditionMatch( triggerId == $tid, conditionSetSize == 2, conditionSetIndex == 1)
+    $cm2 : ConditionMatch( triggerId == $tid, conditionSetSize == 2, conditionSetIndex == 2)
+then
+    $t.setActive( false );
+    Alert alert = new Alert( $tid );
+    alert.addConditionMatch( $cm1 );
+    alert.addConditionMatch( $cm2 );
+    for (String notifierId : $t.getNotifiers()) {
+        notificationsService.notify( notifierId, $cm1.getLog() + " AND " + $cm2.getLog() );
+    }
+    alerts.add( alert );
+    insert( alert );
+    update( $t );
+end

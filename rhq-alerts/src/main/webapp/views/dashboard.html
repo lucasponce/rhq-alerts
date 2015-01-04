@@ -1,0 +1,50 @@
+<div class="row">
+    <div class="col-md-12">
+        <h1>Alerts Dashboard</h1>
+    </div>
+    <!-- TODO Investigate how to create a svg responsive -->
+    <div class="col-md-12 text-center" id="alerts_dashboard"></div>
+    <div class="col-md-8 col-md-offset-2" ng-show="legend != null">
+        <div class="dataTables_wrapper no-footer">
+            <div class="dataTables_header">
+                <div class="dataTables_info"><b> {{ legend.triggerId }}</b> at <b>{{ legend.date }}</b></div>
+            </div>
+            <table class="datatable table table-striped table-bordered dataTable no-footer" role="grid">
+                <thead>
+                    <tr role="row">
+                        <th> Match log</th>
+                        <th> At time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="match in legend.matches" ng-class-odd="'gradeA odd'" ng-class-even="'gradeA even'" >
+                        <td>{{ match.log }}</td>
+                        <td>{{ match.time }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div>
+            <a href ng-click="isConfigCollapsed = !isConfigCollapsed"><span class="pficon pficon-refresh"></span> Refresh Config</a>
+        </div>
+        <form class="form-horizontal" collapse="isConfigCollapsed">
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="refreshInterval">Refresh (ms): </label>
+                <div class="col-md-2">
+                    <input type="number" id="refreshInterval" class="form-control" ng-model="refreshInterval">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-10 col-md-offset-2">
+                    <button type="button" class="btn btn-primary" ng-click="updateRefresh()">Change</button>
+                    <button type="button" class="btn btn-default"
+                            ng-click="isConfigCollapsed = true">Hide</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -7,7 +7,7 @@
     <div class="col-md-8 col-md-offset-2" ng-show="legend != null">
         <div class="dataTables_wrapper no-footer">
             <div class="dataTables_header">
-                <div class="dataTables_info"><b> {{ legend.triggerId }}</b> at <b>{{ legend.date }}</b></div>
+                <div class="dataTables_info"><b> {{ legend.triggerId }}</b> at <b>{{ legend.date | date:'d MMM, y hh:mm:ss a' }}</b></div>
             </div>
             <table class="datatable table table-striped table-bordered dataTable no-footer" role="grid">
                 <thead>
@@ -19,7 +19,7 @@
                 <tbody>
                     <tr ng-repeat="match in legend.matches" ng-class-odd="'gradeA odd'" ng-class-even="'gradeA even'" >
                         <td>{{ match.log }}</td>
-                        <td>{{ match.time }}</td>
+                        <td>{{ match.time | date:'d MMM, y hh:mm:ss a'}}</td>
                     </tr>
                 </tbody>
             </table>

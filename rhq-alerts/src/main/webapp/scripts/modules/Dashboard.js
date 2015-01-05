@@ -47,6 +47,11 @@ var Dashboard = (function() {
     var _element;
     
     /*
+        Refresh interval in milliseconds
+     */
+    var _refreshInterval = 2000;
+    
+    /*
         Initialize visual parameters of graph
      */
     var init = function(dashboardId, width, margin, startTime, endTime, hoverCallback) {
@@ -147,13 +152,23 @@ var Dashboard = (function() {
         }
     };
     
+    var getRefreshInterval = function() {
+      return _refreshInterval;
+    };
+    
+    var setRefreshInterval = function(refreshInterval) {
+        _refreshInterval = refreshInterval;
+    }
+    
     /*
         Return public methods
      */
     return {
         init: init,
         addEvent: addEvent,
-        getEvent: getEvent
+        getEvent: getEvent,
+        getRefreshInterval: getRefreshInterval,
+        setRefreshInterval: setRefreshInterval
     };
     
 })();

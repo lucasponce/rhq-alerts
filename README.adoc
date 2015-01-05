@@ -1,0 +1,27 @@
+= rhq-alerts
+
+== rhq-msg
+
+1. `cd rhq-msg ; mvn clean install`
+2. `cd rhq-msg-broker-wf-extension ; mvn -Dorg.rhq.next.wildfly.home=/opt/tests/wildfly-8.2.0.Final.rhq-msg wildfly-extension:deploy`
+3. `cd rhq-msg-ra-wf-module ; mvn -Pdev -Dorg.rhq.next.wildfly.home=/opt/tests/wildfly-8.2.0.Final.rhq-msg install`
+
+== rhq-alerts
+
+1. `cd rhq-alerts ; mvn clean install -Pdev -Dorg.rhq.next.wildfly.home=/opt/tests/wildfly-8.2.0.Final.rhq-msg`
+
+== Tests
+
+1. Send metrics to Bus REST api:
+
+  TIMESTAMP="$(($(date +%s%N)/1000000))" ; curl -X POST -H "Content-Type: application/json" --data "{\"metrics\" : [ { \"id\": \"Metric-01\", \"timestamp\" : $TIMESTAMP, \"value\" : 0.1} ]}" http://localhost:8080/rest/message/MetricsTopic
+    
+  TIMESTAMP="$(($(date +%s%N)/1000000))" ; curl -X POST -H "Content-Type: application/json" --data "{\"metrics\" : [ { \"id\": \"Metric-01\", \"timestamp\" : $TIMESTAMP, \"value\" : 25.2}, { \"id\": \"Metric-02\", \"timestamp\" : $TIMESTAMP, \"value\" : 16.2} ]}" http://localhost:8080/rest/message/MetricsTopic
+  
+2. Check alerts using Rhq-Alerts REST api
+
+  curl http://localhost:8080/rhq-alerts/api/alerts  
+  
+3. Check Rhq-Alerts Console
+
+  http://localhost:8080/rhq-alerts

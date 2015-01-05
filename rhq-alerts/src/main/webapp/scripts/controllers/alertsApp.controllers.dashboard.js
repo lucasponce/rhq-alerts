@@ -1,4 +1,4 @@
-angular.module('alertsApp.controllers', ['alertsApp.services'])
+angular.module('alertsApp.controllers.dashboard', ['alertsApp.services'])
 
     .controller('DashboardCtrl', function ($scope, $log, $interval, alertsService) {
 
@@ -67,17 +67,5 @@ angular.module('alertsApp.controllers', ['alertsApp.services'])
             Dashboard.setRefreshInterval($scope.refreshInterval);
             $scope.isConfigCollapsed = true;
         }
-
-    }).controller('TriggersCtrl', function ($log) {
-
-        $log.log('TriggersCtrl');
-
-    }).controller('ThresholdsCtrl', function ($log) {
-
-        $log.log('ThresholdsCtrl');
-
-    }).controller('RulesCtrl', function ($log) {
-
-        $log.log('RulesCtrl');
 
     });

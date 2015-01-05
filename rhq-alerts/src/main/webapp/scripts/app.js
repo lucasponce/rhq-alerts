@@ -1,4 +1,5 @@
-angular.module('alertsApp', ['ui.bootstrap', 'ui.router', 'alertsApp.controllers']);
+angular.module('alertsApp', ['ui.bootstrap', 'ui.router', 'alertsApp.controllers.dashboard',
+    'alertsApp.controllers.triggers', 'alertsApp.controllers.thresholds', 'alertsApp.controllers.rules']);
 
 angular.module('alertsApp').config(function ($stateProvider, $httpProvider) {
 

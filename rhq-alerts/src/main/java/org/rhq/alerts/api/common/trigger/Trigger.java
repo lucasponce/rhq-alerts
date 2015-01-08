@@ -11,6 +11,13 @@ public class Trigger extends TriggerTemplate {
     private String id;
     private boolean active;
 
+    /*
+        JSON jackson library needs a default constructor for RESTEasy binding
+     */
+    public Trigger() {
+        this("DefaultId", null);
+    }
+    
     public Trigger(String id, String name) {
         super(name);
 

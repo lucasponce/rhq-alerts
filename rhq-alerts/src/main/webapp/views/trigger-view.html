@@ -1,0 +1,69 @@
+<div class="row">
+    <div class="col-md-12">
+        <h1>Trigger {{ trigger.id }}</h1>
+    </div>
+    <div class="col-md-12">
+        <form class="form-horizontal" name="updateTriggerForm" ng-submit="updateTrigger()">
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="triggerId">
+                    Id
+                </label>
+                <div class="col-md-6">
+                    <input type="text" id="triggerId" ng-model="trigger.id" class="form-control" disabled>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="triggerActive">
+                    Active
+                </label>
+                <div class="col-md-6">
+                    <input type="checkbox" id="triggerActive" ng-model="trigger.active" class="checkbox" >
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="triggerName">
+                    Name
+                </label>
+                <div class="col-md-6">
+                    <input type="text" id="triggerName" ng-model="trigger.name" ng-minlength="1" class="form-control" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="triggerDescription">
+                    Description
+                </label>
+                <div class="col-md-6">
+                    <input type="text" id="triggerDescription" ng-model="trigger.description" class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="triggerMatch">
+                    Match
+                </label>
+                <div class="col-md-6">
+                    <input type="text" id="triggerMatch" ng-model="trigger.match" class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="triggerNotifiers">
+                    Notifiers
+                </label>
+                <div class="col-md-6">
+                    <input type="text" id="triggerNotifiers" ng-model="trigger.notifiers" ng-list class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-6">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" ng-click="deleteTrigger()" class="btn btn-danger">Delete</button>
+                    <button type="button" ui-sref="triggers" class="btn btn-default">Cancel</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-6">
+                    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

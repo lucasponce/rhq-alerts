@@ -44,9 +44,8 @@ g.line text {
     text-align: center;
 }
 
-.vertical-align {
-    display: flex;
-    align-items: center;
+.table tbody > tr > td.vert-align {
+    vertical-align: middle;
 }
 
 .sub-header {

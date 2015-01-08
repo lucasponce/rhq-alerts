@@ -33,22 +33,20 @@ angular.module('alertsApp.controllers.dashboard', ['alertsApp.services'])
         );
 
         function updateGraph() {
-            alertsService.getAlerts()
-                .success(function (data) {
-                    $log.log("getAlerts() - alerts: " + data.length);
-                    var alertsLength = data.length;
-                    for (var i = 0; i < alertsLength; i++) {
-                        var alert = data[i];
-                        alert.name = alert.triggerId;
-                        alert.date = new Date(alert.time);
-                        // Create a description
-                        alert.description = alert.matches.toString();
-                        Dashboard.addEvent(alert);
-                    }
-                })
-                .error(function (status) {
-                    $log.log("getAlerts() - error - status: " + status);
-                });
+            alertsService.getAlerts().then(function (alerts) {
+                $log.log("getAlerts - alerts: " + alerts.length);
+                var alertsLength = alerts.length;
+                for (var i = 0; i < alertsLength; i++) {
+                    var alert = alerts[i];
+                    alert.name = alert.triggerId;
+                    alert.date = new Date(alert.time);
+                    // Create a description
+                    alert.description = alert.matches.toString();
+                    Dashboard.addEvent(alert);
+                }
+            }, function error(reason) {
+                $log.log("getAlerts() - error - reason: " + reason);
+            });
         }
         
         var stopInterval = $interval( updateGraph, $scope.refreshInterval );

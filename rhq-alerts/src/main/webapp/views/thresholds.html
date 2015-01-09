@@ -1,3 +1,46 @@
-<div>
-    Thresholds
+<div class="row">
+    <div class="col-md-12">
+        <h1>Thresholds Definitions</h1>
+    </div>
+    <div class="col-md-12">
+        <div class="dataTables_wrapper no-footer">
+            <div class="dataTables_header">
+                <div class="dataTables_info text-right">
+                    <button ui-sref="newThreshold" type="button" class="btn btn-primary">New Threshold</button>
+                    <button type="button" class="btn btn-info" ng-click="refreshThresholds()">Refresh</button>
+                </div>
+            </div>
+            <table class="datatable table table-striped table-bordered dataTable no-footer" role="grid">
+                <thead>
+                <tr role="row">
+                    <th class="vert-align">Trigger Id</th>
+                    <th class="vert-align">Metric Id</th>
+                    <th class="vert-align">Condition Set Size</th>
+                    <th class="vert-align">Condition Set Index</th>
+                    <th class="vert-align">Operator</th>
+                    <th class="vert-align">Threshold</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="threshold in thresholds" ng-class-odd="'gradeA odd'" ng-class-even="'gradeA even'" >
+                    <td class="vert-align">{{ threshold.triggerId }}</td>
+                    <td class="vert-align">{{ threshold.metricId }}</td>
+                    <td class="vert-align">{{ threshold.conditionSetSize }}</td>
+                    <td class="vert-align">{{ threshold.conditionSetIndex }}</td>
+                    <td class="vert-align">{{ threshold.operator }}</td>
+                    <td class="vert-align">{{ threshold.threshold }}</td>
+                    <td class="text-right vert-align">
+                        <a ui-sref="viewThreshold({triggerId:threshold.triggerId, metricId:threshold.metricId})" 
+                           class="btn btn-primary">View</a>
+                        <a class="btn btn-danger" ng-click="deleteThreshold(threshold)">Delete</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-offset-2 col-md-8">
+            <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+        </div>
+    </div>
 </div>

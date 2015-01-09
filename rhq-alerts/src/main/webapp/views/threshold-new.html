@@ -1,0 +1,79 @@
+<div class="row">
+    <div class="col-md-12">
+        <h1>New Threshold</h1>
+    </div>
+    <div class="col-md-12">
+        <form class="form-horizontal" name="newThresholdForm" ng-submit="newThreshold()">
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="triggerId">
+                    Trigger Id
+                </label>
+                <div class="col-md-6">
+                    <input type="text" id="triggerId" ng-model="threshold.triggerId" class="form-control" ng-minlength="1" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="metricId">
+                    Metric Id
+                </label>
+                <div class="col-md-6">
+                    <input type="text" id="metricId" ng-model="threshold.metricId" class="form-control" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="conditionSetSize">
+                    Condition Set Size
+                </label>
+                <div class="col-md-6">
+                    <input type="number" id="conditionSetSize" ng-model="threshold.conditionSetSize" class="form-control" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="conditionSetIndex">
+                    Condition Set Index
+                </label>
+                <div class="col-md-6">
+                    <input type="number" id="conditionSetIndex" ng-model="threshold.conditionSetIndex" class="form-control" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">
+                    Operator
+                </label>
+                <div class="col-md-6">
+                    <label class="radio-inline">
+                        <input type="radio" ng-model="threshold.operator" class="radio" value="GT"> GT [ > ]
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" ng-model="threshold.operator" class="radio" value="GTE"> GTE [ >= ]
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" ng-model="threshold.operator" class="radio" value="LT"> LT [ < ]
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" ng-model="threshold.operator" class="radio" value="LTE"> LTE [ <= ]
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="thresholdValue">
+                    Threshold
+                </label>
+                <div class="col-md-6">
+                    <input type="number" step="any" id="thresholdValue" ng-model="threshold.threshold" class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-6">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" ui-sref="thresholds" class="btn btn-default">Cancel</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-6">
+                    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

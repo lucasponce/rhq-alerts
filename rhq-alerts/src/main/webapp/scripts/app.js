@@ -36,6 +36,14 @@ angular.module('alertsApp').config(function ($stateProvider) {
         url: '/thresholds',
         templateUrl: 'views/thresholds.html',
         controller: 'ThresholdsCtrl'
+    }).state('viewThreshold', {
+        url: '/thresholds/t/:triggerId/m/:metricId/view',
+        templateUrl: 'views/threshold-view.html',
+        controller: 'ThresholdsViewCtrl'
+    }).state('newThreshold', {
+        url: '/thresholds/new',
+        templateUrl: 'views/threshold-new.html',
+        controller: 'ThresholdsNewCtrl'
     });
     
     /*
@@ -45,6 +53,14 @@ angular.module('alertsApp').config(function ($stateProvider) {
         url: '/rules',
         templateUrl: 'views/rules.html',
         controller: 'RulesCtrl'
+    }).state('viewRule', {
+        url: '/rules/:id/view',
+        templateUrl: 'views/rule-view.html',
+        controller: 'RulesViewCtrl'
+    }).state('newRule', {
+        url: '/rules/new',
+        templateUrl: 'views/rule-new.html',
+        controller: 'RulesNewCtrl'
     });
 
 }).config(function(RestangularProvider) {

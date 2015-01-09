@@ -6,7 +6,6 @@ angular.module('alertsApp.controllers.triggers', ['alertsApp.services'])
         
         var getTriggers = function() {
             triggersService.getTriggers().then(function (triggers) {
-                $log.log("getTriggers - triggers: " + triggers.length);
                 $scope.triggers = triggers;
             }, function error(reason) {
                 var newAlert = {type: 'danger', msg: reason.statusText};
@@ -23,7 +22,6 @@ angular.module('alertsApp.controllers.triggers', ['alertsApp.services'])
         $scope.deleteTrigger = function(trigger) {
             if ($window.confirm('Do you want to delete ' + trigger.id + ' ?')) {
                 trigger.remove().then(function() {
-                    $log.log('deleteTrigger() - remove() ' + trigger.id);
                     getTriggers();
                     $state.go('triggers');
                 }, function error(reason) {
@@ -96,7 +94,10 @@ angular.module('alertsApp.controllers.triggers', ['alertsApp.services'])
     })
     .controller('TriggerNewCtrl', function ($scope, $state, $log, triggersService) {
         
-        $scope.trigger = {};
+        /*
+            Init new trigger object with default match value
+         */
+        $scope.trigger = { match: "ALL" };
         $scope.alerts = [];
         
         $scope.newTrigger = function() {

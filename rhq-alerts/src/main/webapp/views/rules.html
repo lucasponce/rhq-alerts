@@ -1,3 +1,40 @@
-<div>
-    Rules
+<div class="row">
+    <div class="col-md-12">
+        <h1>Rules Definitions</h1>
+    </div>
+    <div class="col-md-12">
+        <div class="dataTables_wrapper no-footer">
+            <div class="dataTables_header">
+                <div class="dataTables_info text-right">
+                    <button ui-sref="newRule" type="button" class="btn btn-primary">New Rule</button>
+                    <button type="button" class="btn btn-info" ng-click="refreshRules()">Refresh</button>
+                </div>
+            </div>
+            <table class="datatable table table-striped table-bordered dataTable no-footer" role="grid">
+                <thead>
+                <tr role="row">
+                    <th class="vert-align">Id</th>
+                    <th class="vert-align">Rule</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="rule in rules" ng-class-odd="'gradeA odd'" ng-class-even="'gradeA even'" >
+                    <td class="vert-align">{{ rule.id }}</td>
+                    <td class="vert-align">
+                        <textarea class="form-control" rows="10" disabled>{{ rule.rule }}</textarea>
+                    </td>
+                    <td class="text-right vert-align">
+                        <a ui-sref="viewRule({id:rule.id})"
+                           class="btn btn-primary">View</a>
+                        <a class="btn btn-danger" ng-click="deleteRule(rule)">Delete</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-offset-2 col-md-8">
+            <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+        </div>
+    </div>
 </div>

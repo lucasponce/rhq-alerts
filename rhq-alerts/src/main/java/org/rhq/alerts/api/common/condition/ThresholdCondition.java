@@ -17,6 +17,13 @@ public class ThresholdCondition extends Condition {
     private Operator operator;
     private Double threshold;
 
+    /*
+        JSON jackson library needs a default constructor for RESTEasy binding
+     */
+    public ThresholdCondition() {
+       this("DefaultId", "DefaultId", 1, 1, Operator.GTE, 0d);
+    }
+    
     public ThresholdCondition(String triggerId, String metricId, int conditionSetSize, int conditionSetIndex, Operator operator, Double threshold) {
         super(triggerId, conditionSetSize, conditionSetIndex);
         this.metricId = metricId;

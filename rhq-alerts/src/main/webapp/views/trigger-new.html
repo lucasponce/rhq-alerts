@@ -37,11 +37,16 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-md-2 control-label" for="triggerMatch">
+                <label class="col-md-2 control-label">
                     Match
                 </label>
                 <div class="col-md-6">
-                    <input type="text" id="triggerMatch" ng-model="trigger.match" class="form-control">
+                    <label class="radio-inline">
+                        <input type="radio" ng-model="trigger.match" class="radio" value="ALL"> ALL
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" ng-model="trigger.match" class="radio" value="ANY"> ANY
+                    </label>
                 </div>
             </div>
             <div class="form-group">
@@ -50,6 +55,7 @@
                 </label>
                 <div class="col-md-6">
                     <input type="text" id="triggerNotifiers" ng-model="trigger.notifiers" ng-list class="form-control">
+                    <p>Introduce a list of notifiers separated by ,</p>
                 </div>
             </div>
             <div class="form-group">

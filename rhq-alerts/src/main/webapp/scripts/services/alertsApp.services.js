@@ -35,4 +35,60 @@ angular.module('alertsApp.services', [])
             newTrigger: newTrigger
         };
         
+    }]).factory('thresholdsService', ['Restangular', function (Restangular) {
+
+        var thresholds = Restangular.all('thresholds');
+
+        var getThresholds = function() {
+            return thresholds.getList();
+        }
+        
+        var getThreshold = function(triggerId, metricId) {
+            return Restangular.one('thresholds').one('t', triggerId).one('m', metricId).get();
+        }
+        
+        var newThreshold = function(newThreshold) {
+            return thresholds.post(newThreshold);
+        }
+        
+        var updateThreshold = function(threshold) {
+            return Restangular.one('thresholds').one('t', threshold.triggerId).one('m', threshold.metricId)
+                .customPUT(threshold);
+        }
+
+        var deleteThreshold = function(threshold) {
+            return Restangular.one('thresholds').one('t', threshold.triggerId).one('m', threshold.metricId)
+                .customDELETE();
+        }
+        
+        return  {
+            getThresholds: getThresholds,
+            getThreshold: getThreshold,
+            updateThreshold: updateThreshold,
+            deleteThreshold: deleteThreshold,
+            newThreshold: newThreshold
+        };
+
+    }]).factory('rulesService', ['Restangular', function (Restangular) {
+
+        var rules = Restangular.all('rules');
+
+        var getRules = function() {
+            return rules.getList();
+        }
+
+        var getRule = function(ruleId) {
+            return Restangular.one('rules', ruleId).get();
+        }
+
+        var newRule = function(newRule) {
+            return rules.post(newRule);
+        }        
+        
+        return  {
+            getRules: getRules,
+            getRule: getRule,
+            newRule: newRule
+        };
+
     }]);

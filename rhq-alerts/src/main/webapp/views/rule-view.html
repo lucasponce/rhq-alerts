@@ -1,0 +1,37 @@
+<div class="row">
+    <div class="col-md-12">
+        <h1>Rule {{ rule.id }}</h1>
+    </div>
+    <div class="col-md-12">
+        <form class="form-horizontal" name="updateRuleForm" ng-submit="updateRule()">
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="ruleId">
+                    Id
+                </label>
+                <div class="col-md-6">
+                    <input type="text" id="ruleId" ng-model="rule.id" class="form-control" disabled>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="ruleBody">
+                    Rule
+                </label>
+                <div class="col-md-6">
+                    <textarea class="form-control" id="ruleBody" ng-model="rule.rule" rows="25"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-6">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" ng-click="deleteRule()" class="btn btn-danger">Delete</button>
+                    <button type="button" ui-sref="rules" class="btn btn-default">Cancel</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-6">
+                    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

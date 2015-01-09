@@ -1,5 +1,8 @@
 <div class="row">
     <div class="col-md-12">
+        <div class="refresh-actions pull-right">
+            <a href ng-click="reloadDefinitions()"><span class="pficon pficon-import"></span> Reload Definitions</a>
+        </div>
         <h1>Alerts Dashboard</h1>
     </div>
     <!-- TODO Investigate how to create a svg responsive -->
@@ -28,7 +31,7 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-        <div>
+        <div class="actions">
             <a href ng-click="isConfigCollapsed = !isConfigCollapsed"><span class="pficon pficon-refresh"></span> Refresh Config</a>
         </div>
         <form class="form-horizontal" collapse="isConfigCollapsed">
@@ -46,5 +49,8 @@
                 </div>
             </div>
         </form>
+        <div class="col-md-offset-2 col-md-8">
+            <alert ng-repeat="alert in alertsErrors" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+        </div>
     </div>
 </div>

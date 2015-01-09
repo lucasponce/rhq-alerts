@@ -2,18 +2,18 @@ angular.module('alertsApp.controllers.dashboard', ['alertsApp.services'])
 
     .controller('DashboardCtrl', function ($scope, $log, $interval, alertsService) {
 
+        $scope.alertsErrors = [];
+        
         $scope.isConfigCollapsed = true;
         $scope.refreshInterval = Dashboard.getRefreshInterval();
-
-        $log.log('DashboardCtrl');
-
+        
         var dashboardId = 'alerts_dashboard';
         var legendId = 'legend_dashboard';
 
         var oneHour = 1 * 60 * 60 * 1000;
         var endTime = Date.now() + oneHour;
         var startTime = endTime - (1.5 * oneHour);
-
+        
         var hoverCallback = function(series, timestamp) {
             /*
                 "series" var will store whole text with (<number>) counter representation
@@ -34,7 +34,7 @@ angular.module('alertsApp.controllers.dashboard', ['alertsApp.services'])
 
         function updateGraph() {
             alertsService.getAlerts().then(function (alerts) {
-                $log.log("getAlerts - alerts: " + alerts.length);
+                
                 var alertsLength = alerts.length;
                 for (var i = 0; i < alertsLength; i++) {
                     var alert = alerts[i];
@@ -45,25 +45,46 @@ angular.module('alertsApp.controllers.dashboard', ['alertsApp.services'])
                     Dashboard.addEvent(alert);
                 }
             }, function error(reason) {
-                $log.log("getAlerts() - error - reason: " + reason);
+                var newAlert = {type: 'danger'};
+                if (reason.data.errorMsg) {
+                    newAlert.msg = reason.data.errorMsg;
+                } else {
+                    newAlert.msg = reason.statusText;
+                }
+                $scope.alertsErrors.push(newAlert);
             });
         }
         
         var stopInterval = $interval( updateGraph, $scope.refreshInterval );
         
         $scope.$on('$destroy', function() {
-            $log.log('Destroying DashboardCtrl - Cancelling $interval...');
-            
             $interval.cancel(stopInterval);
         });
         
         $scope.updateRefresh = function() {
-            $log.log('Updating refresh...');
-            
             $interval.cancel(stopInterval);
             stopInterval = $interval( updateGraph, $scope.refreshInterval );
             Dashboard.setRefreshInterval($scope.refreshInterval);
             $scope.isConfigCollapsed = true;
+        }
+
+        $scope.reloadDefinitions = function() {
+            $log.log("reloadDefinitions()");
+            alertsService.reload().then(function() {
+                
+            }, function error(reason) {
+                var newAlert = {type: 'danger'};
+                if (reason.data.errorMsg) {
+                    newAlert.msg = reason.data.errorMsg;
+                } else {
+                    newAlert.msg = reason.statusText;
+                }
+                $scope.alertsErrors.push(newAlert);
+            });
+        }
+        
+        $scope.closeAlert = function(index) {
+            $scope.alerts.splice(index, 1);
         }
 
     });

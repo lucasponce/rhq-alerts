@@ -8,8 +8,13 @@ angular.module('alertsApp.services', [])
             return alerts.getList();
         }
 
+        var reload = function() {
+            return Restangular.one('reload').get();
+        }
+        
         return {
-            getAlerts: getAlerts
+            getAlerts: getAlerts,
+            reload: reload
         };
 
     }])

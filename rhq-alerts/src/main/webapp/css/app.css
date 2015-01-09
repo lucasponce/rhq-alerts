@@ -56,3 +56,7 @@ g.line text {
 .mg-left {
     margin-left: 5px;
 }
+
+.refresh-actions {
+    margin-top: 8px;
+}

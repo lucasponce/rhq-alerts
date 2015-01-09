@@ -378,4 +378,11 @@ public class AlertsHandler {
         }
     }
     
+    @GET
+    @Path("/reload")
+    public void reloadAlerts(@Suspended final AsyncResponse response) {
+        alertsService.reload();
+        response.resume(Response.status(Response.Status.OK).build());
+    }
+    
 }

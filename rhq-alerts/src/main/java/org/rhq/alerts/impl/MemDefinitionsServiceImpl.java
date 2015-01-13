@@ -42,6 +42,8 @@ public class MemDefinitionsServiceImpl implements DefinitionsService {
     private Map<String, Trigger> triggers = new HashMap();
     private Map<String, String> rules = new HashMap();
 
+    private RulesGenerator rulesGenerator = new RulesGenerator();
+    
     public MemDefinitionsServiceImpl() {
         LOG.info("Creating INSTANCE...");
     }
@@ -68,7 +70,13 @@ public class MemDefinitionsServiceImpl implements DefinitionsService {
         key.triggerId = threshold.getTriggerId();
         key.metricId = threshold.getMetricId();
         thresholds.put(key, threshold);
-    }
+        
+        Map<String, String> generatedRules = rulesGenerator.generateRules(threshold);
+        Set<String> keys = generatedRules.keySet();
+        for (String ruleId : keys) {
+            addRule(ruleId, generatedRules.get(ruleId));
+        }
+    } 
 
     @Override
     public void removeThreshold(String triggerId, String metricId) {
@@ -178,7 +186,9 @@ public class MemDefinitionsServiceImpl implements DefinitionsService {
         
         /*
             Rules initialization
-         */
+            
+            TODO No rules initialization, on this approach rules will be infered from data
+                    
         File rules = new File(initFolder, "rules");
         if (rules.exists() && rules.isDirectory()) {
             for (File rule : rules.listFiles()) {
@@ -193,6 +203,7 @@ public class MemDefinitionsServiceImpl implements DefinitionsService {
         } else {
             LOG.error("rules folder not found. Skipping rules initialization.");
         }
+        */
         
         /*
             Triggers
@@ -225,7 +236,7 @@ public class MemDefinitionsServiceImpl implements DefinitionsService {
                         for (String notifier : notifiers) {
                             trigger.addNotifier(notifier);
                         }
-                        this.triggers.put(triggerId, trigger);
+                        addTrigger(trigger);
                     }
                 }
             }
@@ -260,10 +271,7 @@ public class MemDefinitionsServiceImpl implements DefinitionsService {
                         
                         ThresholdCondition threshold = new ThresholdCondition(triggerId, metricId, conditionSetSize, 
                                 conditionSetIndex, operator, value);
-                        ThresholdKey key = new ThresholdKey();
-                        key.triggerId = triggerId;
-                        key.metricId = metricId;
-                        this.thresholds.put(key, threshold);
+                        addThreshold(threshold);
                     }
                 }
             }            

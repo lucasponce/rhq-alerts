@@ -101,10 +101,7 @@ public class BasicAlertsServiceImpl implements AlertsService {
         for (String ruleId : rules.keySet()) {
             cep.addRule(ruleId, rules.get(ruleId));
         }
-        
-        Collection<ThresholdCondition> thresholds = definitions.getThresholds();
-        cep.addFacts(thresholds);
-        
+
         Collection<Trigger> triggers = definitions.getTriggers();
         cep.addFacts(triggers);
 

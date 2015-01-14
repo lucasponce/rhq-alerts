@@ -24,7 +24,7 @@ public class RulesGenerator {
             String thresholdRule = generateThresholdRule(thresholdRuleId, threshold);
             rules.put(thresholdRuleId, thresholdRule);
             
-            String conditionsRuleId = "Alert" + threshold.getConditionSetSize() + "Condition";
+            String conditionsRuleId = "Alert-" + threshold.getTriggerId() + "-" + threshold.getConditionSetSize() + "Condition";
             String conditionsRule = generateConditionRule(conditionsRuleId, threshold);
             rules.put(conditionsRuleId, conditionsRule);
         }
@@ -33,9 +33,9 @@ public class RulesGenerator {
     }
     
     private String generateThresholdRule(String thresholdRuleId, ThresholdCondition threshold) {
-        String rule = HEADER + NL + NL +
+        String rule = HEADER + NL +
         
-        "rule \"" + thresholdRuleId + "\"" + NL + NL +
+        "rule \"" + thresholdRuleId + "\"" + NL +
                         
         "when" + NL + 
         "   $t  : Trigger( active == true, id == \"" + threshold.getTriggerId() + "\")" + NL +
@@ -70,11 +70,11 @@ public class RulesGenerator {
     }
     
     private String generateConditionRule(String conditionsRuleId, ThresholdCondition threshold) {
-        String rule = HEADER + NL + NL +
+        String rule = HEADER + NL +
         
         "rule \"" + conditionsRuleId + "\"" + NL +
         "when" + NL +
-        "   $t  : Trigger( active == true, id == '" + threshold.getTriggerId() + "' )" + NL +
+        "   $t  : Trigger( active == true, id == \"" + threshold.getTriggerId() + "\" )" + NL +
         conditions(threshold) +
         "then" + NL +
         "   $t.setActive( false );" + NL +
@@ -93,7 +93,7 @@ public class RulesGenerator {
         int setSize = threshold.getConditionSetSize();
         for (int i = 1; i <= setSize; i++) {
             conditions += "   $cm" + i +
-                                  " : ConditionMatch( triggerId == '" + threshold.getMetricId() + "', " +
+                                  " : ConditionMatch( triggerId == \"" + threshold.getTriggerId() + "\", " +
                                   "conditionSetSize == " + setSize + ", " +
                                   "conditionSetIndex == " + i + ")" + NL;
         }
@@ -133,11 +133,11 @@ public class RulesGenerator {
                 "import org.rhq.alerts.api.common.data.Metric" + NL +
                 "import org.rhq.alerts.api.common.data.State" + NL +
                 "import org.rhq.alerts.api.services.NotificationsService" + NL +
-                "import java.util.List" + NL +
+                "import java.util.List" + NL + NL +
 
                 "global NotificationsService notificationsService" + NL +
                 "global List alerts" + NL +
-                "global List states" + NL + NL;
+                "global List states" + NL;
     }
 
 }

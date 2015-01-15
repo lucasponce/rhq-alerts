@@ -1,4 +1,4 @@
-package org.rhq.alerts.api.common.data;
+package org.rhq.alerts.api.common.event;
 
 /**
  * Base class for incoming data into AlertsService

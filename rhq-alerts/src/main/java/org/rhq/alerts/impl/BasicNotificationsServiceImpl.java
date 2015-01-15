@@ -35,7 +35,7 @@ public class BasicNotificationsServiceImpl implements NotificationsService {
     
     
     public BasicNotificationsServiceImpl() {
-        LOG.info("Creating INSTANCE...");
+        LOG.debug("Creating INSTANCE...");
     }
     
     @PostConstruct

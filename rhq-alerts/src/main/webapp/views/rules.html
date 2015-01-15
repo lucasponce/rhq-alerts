@@ -6,7 +6,6 @@
         <div class="dataTables_wrapper no-footer">
             <div class="dataTables_header">
                 <div class="dataTables_info text-right">
-                    <button ui-sref="newRule" type="button" class="btn btn-primary">New Rule</button>
                     <button type="button" class="btn btn-info" ng-click="refreshRules()">Refresh</button>
                 </div>
             </div>
@@ -27,7 +26,6 @@
                     <td class="text-right vert-align">
                         <a ui-sref="viewRule({id:rule.id})"
                            class="btn btn-primary">View</a>
-                        <a class="btn btn-danger" ng-click="deleteRule(rule)">Delete</a>
                     </td>
                 </tr>
                 </tbody>

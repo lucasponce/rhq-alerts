@@ -4,16 +4,11 @@ import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
 import javax.inject.Inject;
 import javax.jms.MessageListener;
-import javax.jms.TopicConnectionFactory;
-import javax.naming.InitialContext;
 
-import org.rhq.alerts.api.common.data.Metric;
+import org.rhq.alerts.api.common.event.Metric;
 import org.rhq.alerts.api.services.AlertsService;
 import org.rhq.alerts.msg.common.MetricMessage;
-import org.rhq.msg.common.*;
 import org.rhq.msg.common.consumer.BasicMessageListener;
-import org.rhq.msg.common.producer.ProducerConnectionContext;
-import org.rhq.notifiers.common.NotificationMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

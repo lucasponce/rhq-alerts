@@ -1,11 +1,10 @@
 package org.rhq.alerts.msg.common;
 
 import com.google.gson.annotations.Expose;
-import org.rhq.alerts.api.common.data.Metric;
+import org.rhq.alerts.api.common.event.Metric;
 import org.rhq.msg.common.BasicMessage;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**

@@ -3,8 +3,7 @@ package org.rhq.alerts.impl;
 import org.rhq.alerts.api.common.condition.ThresholdCondition;
 import org.rhq.alerts.api.common.trigger.Trigger;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.rhq.alerts.impl.RulesGenerator.RulesTemplate.NL;
 import static org.rhq.alerts.impl.RulesGenerator.RulesTemplate.HEADER;
@@ -30,6 +29,20 @@ public class RulesGenerator {
         }
         
         return rules;
+    }
+    
+    public Collection<String> generateRuleId(ThresholdCondition threshold) {
+        List<String> ruleId = new ArrayList<String>();
+    
+        if (threshold != null && threshold.getTriggerId() != null && threshold.getMetricId() != null &
+                !threshold.getTriggerId().isEmpty() && !threshold.getMetricId().isEmpty()) {
+            String thresholdRuleId = "Threshold-" + threshold.getTriggerId() + "-" + threshold.getMetricId();
+            String conditionsRuleId = "Alert-" + threshold.getTriggerId() + "-" + threshold.getConditionSetSize() + "Condition";
+            ruleId.add(thresholdRuleId);
+            ruleId.add(conditionsRuleId);
+        }        
+        
+        return ruleId;
     }
     
     private String generateThresholdRule(String thresholdRuleId, ThresholdCondition threshold) {
@@ -130,14 +143,12 @@ public class RulesGenerator {
                 "import org.rhq.alerts.api.common.condition.ConditionMatch" + NL +
                 "import org.rhq.alerts.api.common.condition.ThresholdCondition" + NL +
                 "import org.rhq.alerts.api.common.condition.Alert" + NL +
-                "import org.rhq.alerts.api.common.data.Metric" + NL +
-                "import org.rhq.alerts.api.common.data.State" + NL +
+                "import org.rhq.alerts.api.common.event.Metric" + NL +
                 "import org.rhq.alerts.api.services.NotificationsService" + NL +
                 "import java.util.List" + NL + NL +
 
                 "global NotificationsService notificationsService" + NL +
-                "global List alerts" + NL +
-                "global List states" + NL;
+                "global List alerts" + NL;
     }
 
 }

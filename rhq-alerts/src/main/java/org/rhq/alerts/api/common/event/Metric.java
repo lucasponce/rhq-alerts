@@ -1,4 +1,4 @@
-package org.rhq.alerts.api.common.data;
+package org.rhq.alerts.api.common.event;
 
 /**
  * An external incoming event.

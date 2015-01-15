@@ -160,6 +160,17 @@ var Dashboard = (function() {
         _refreshInterval = refreshInterval;
     }
     
+    var clear = function() {
+        _data = [];
+        _seriesIndexes = [];
+        _storage = [];
+
+        _element.datum(_data);
+        
+        // Redraw
+        _graph(_element);
+    }
+    
     /*
         Return public methods
      */
@@ -168,7 +179,8 @@ var Dashboard = (function() {
         addEvent: addEvent,
         getEvent: getEvent,
         getRefreshInterval: getRefreshInterval,
-        setRefreshInterval: setRefreshInterval
+        setRefreshInterval: setRefreshInterval,
+        clear: clear
     };
     
 })();

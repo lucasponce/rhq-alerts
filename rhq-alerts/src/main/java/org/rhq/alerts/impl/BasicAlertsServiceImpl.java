@@ -1,9 +1,7 @@
 package org.rhq.alerts.impl;
 
 import org.rhq.alerts.api.common.condition.Alert;
-import org.rhq.alerts.api.common.condition.ThresholdCondition;
-import org.rhq.alerts.api.common.data.Metric;
-import org.rhq.alerts.api.common.data.State;
+import org.rhq.alerts.api.common.event.Metric;
 import org.rhq.alerts.api.common.trigger.Trigger;
 import org.rhq.alerts.api.services.AlertsService;
 import org.rhq.alerts.api.services.DefinitionsService;
@@ -34,7 +32,6 @@ public class BasicAlertsServiceImpl implements AlertsService {
     private final List<Metric> processed;
     
     private final List<Alert> alerts;
-    private final List<State> states;
     
     private final Timer wakeUpTimer;
     private TimerTask cepTask;    
@@ -49,11 +46,10 @@ public class BasicAlertsServiceImpl implements AlertsService {
     NotificationsService notificationsService;
 
     public BasicAlertsServiceImpl() {
-        LOG.info("Creating INSTANCE...");
+        LOG.debug("Creating INSTANCE...");
         
         pending = new CopyOnWriteArrayList();
         processed = new CopyOnWriteArrayList();
-        states = new CopyOnWriteArrayList();
         alerts = new CopyOnWriteArrayList();
 
         wakeUpTimer = new Timer("BasicAlertsServiceImpl-Timer");
@@ -79,15 +75,35 @@ public class BasicAlertsServiceImpl implements AlertsService {
         }
         pending.addAll(metrics);
     }
-
-    @Override
-    public Collection<State> checkState() {
-        return Collections.unmodifiableCollection(states);
-    }
-
+    
     @Override
     public Collection<Alert> checkAlert() {
         return Collections.unmodifiableCollection(alerts);
+    }
+    
+    
+    @Override
+    public void updateTrigger(Trigger t) {
+        if (t != null) {
+            for (Object fact : cep.getFacts(t)) {
+                Trigger trigger = (Trigger)fact;
+                if (trigger.getId().equals(t.getId())) {
+                    /*
+                        Status only
+                     */
+                    trigger.setActive(t.isActive());
+                    cep.updateFact(trigger);
+                    return;
+                }
+            }
+        }
+    }
+
+    @Override
+    public void removeTrigger(Trigger t) {
+        if (t != null) {
+            cep.removeFact(t);
+        }
     }
 
     @Override
@@ -107,8 +123,7 @@ public class BasicAlertsServiceImpl implements AlertsService {
 
         cep.addGlobal("notificationsService", notificationsService);
         cep.addGlobal("alerts", alerts);
-        cep.addGlobal("states", states);
-        
+
         cepTask = new CepInvoker();
         wakeUpTimer.schedule(cepTask, DELAY, PERIOD);
     }
@@ -120,10 +135,12 @@ public class BasicAlertsServiceImpl implements AlertsService {
         cep.clear();
     
         pending.clear();
-        states.clear();
         alerts.clear();
         processed.clear();
-    
+
+        Collection<Trigger> triggers = definitions.getTriggers();
+        cep.addFacts(triggers);
+        
         cepTask = new CepInvoker();
         wakeUpTimer.schedule(cepTask, DELAY, PERIOD);
     }

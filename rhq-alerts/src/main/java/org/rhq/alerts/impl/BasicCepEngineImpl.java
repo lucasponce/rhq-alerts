@@ -1,5 +1,6 @@
 package org.rhq.alerts.impl;
 
+import org.drools.core.ObjectFilter;
 import org.kie.api.KieServices;
 import org.kie.api.builder.KieBuilder;
 import org.kie.api.builder.KieFileSystem;
@@ -39,7 +40,7 @@ public class BasicCepEngineImpl implements CepEngine {
     }
 
     public BasicCepEngineImpl() {
-        LOG.info("Creating INSTANCE...");
+        LOG.debug("Creating INSTANCE...");
     }
 
     @PostConstruct
@@ -71,7 +72,7 @@ public class BasicCepEngineImpl implements CepEngine {
             throw new IllegalArgumentException("Id must not be null");
         }
 
-        LOG.info("Adding rule " + id + " ...");
+        LOG.debug("Adding rule " + id + " ...");
 
         String path = path(id);
         if (kfs.read(path) != null) {
@@ -101,7 +102,7 @@ public class BasicCepEngineImpl implements CepEngine {
             throw new IllegalArgumentException("Id must not be null");
         }
 
-        LOG.info("Removing rule " + id + " ...");
+        LOG.debug("Removing rule " + id + " ...");
 
         String path = path(id);
         if (kfs.read(path) == null) {
@@ -129,7 +130,7 @@ public class BasicCepEngineImpl implements CepEngine {
     public void addGlobal(String name, Object global) {
         if (!initSession()) return;
 
-        LOG.info("Adding global " + name + " - " + global + " ...");
+        LOG.debug("Adding global " + name + " - " + global + " ...");
 
         kSession.setGlobal(name, global);
     }
@@ -138,7 +139,7 @@ public class BasicCepEngineImpl implements CepEngine {
     public void addFact(Object fact) {
         if (!initSession()) return;
 
-        LOG.info("Adding fact " + fact + " ...");
+        LOG.debug("Adding fact " + fact + " ...");
 
         kSession.insert(fact);
     }
@@ -149,7 +150,7 @@ public class BasicCepEngineImpl implements CepEngine {
 
         if (facts != null && !facts.isEmpty()) {
             for (Object fact : facts) {
-                LOG.info("Adding fact " + fact + " ...");
+                LOG.debug("Adding fact " + fact + " ...");
 
                 kSession.insert(fact);
             }
@@ -167,15 +168,54 @@ public class BasicCepEngineImpl implements CepEngine {
     }
 
     @Override
+    public void updateFact(Object fact) {
+        if (!initSession()) return;
+        
+        FactHandle fh = kSession.getFactHandle(fact);
+        if (fh != null) {
+            LOG.debug("Found fh: " + fh + " for " + fact);
+            kSession.update(fh, fact);
+        }  else {
+            LOG.debug("Not Found fh: " + fh + " for " + fact);
+        }
+    }
+    
+    @Override
+    public Collection getFacts(final Object filter) {
+        if (!initSession()) return null;
+        
+        return kSession.getObjects(new ObjectFilter() {
+            @Override
+            public boolean accept(Object object) {
+                return (object.getClass().equals(filter.getClass()));
+            }
+        });
+    }
+    
+    @Override
     public void fire() {
         if (!initSession()) return;
 
         LOG.info("Firing rules ... ");
         LOG.info("BEFORE Facts: " + kSession.getFactCount());
+        
+        if (LOG.isDebugEnabled()) {
+            Collection objects = kSession.getObjects();
+            for (Object o : objects) {
+                LOG.debug(o.toString());
+            }
+        }
 
         kSession.fireAllRules();
 
         LOG.info("AFTER Facts: " + kSession.getFactCount());
+
+        if (LOG.isDebugEnabled()) {
+            Collection objects = kSession.getObjects();
+            for (Object o : objects) {
+                LOG.debug(o.toString());
+            }
+        }
     }
 
     @Override

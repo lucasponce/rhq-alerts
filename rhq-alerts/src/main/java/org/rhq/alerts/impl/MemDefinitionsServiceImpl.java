@@ -45,7 +45,7 @@ public class MemDefinitionsServiceImpl implements DefinitionsService {
     private RulesGenerator rulesGenerator = new RulesGenerator();
     
     public MemDefinitionsServiceImpl() {
-        LOG.info("Creating INSTANCE...");
+        LOG.debug("Creating INSTANCE...");
     }
     
     @PostConstruct
@@ -86,6 +86,13 @@ public class MemDefinitionsServiceImpl implements DefinitionsService {
         ThresholdKey key = new ThresholdKey();
         key.triggerId = triggerId;
         key.metricId = metricId;
+        ThresholdCondition threshold = thresholds.get(key);
+
+        Collection<String> ruleIds = rulesGenerator.generateRuleId(threshold);
+        for (String ruleId : ruleIds) {
+            removeRule(ruleId);
+        }
+
         thresholds.remove(key);
     }
 
@@ -134,16 +141,14 @@ public class MemDefinitionsServiceImpl implements DefinitionsService {
         return triggers.get(triggerId);
     }
 
-    @Override
-    public void addRule(String ruleId, String rule) {
+    private void addRule(String ruleId, String rule) {
         if (ruleId == null || rule == null) {
             throw new IllegalArgumentException("ruleId or rule must not be null");
         }
         rules.put(ruleId, rule);
     }
 
-    @Override
-    public void removeRule(String ruleId) {
+    private void removeRule(String ruleId) {
         if (ruleId == null) {
             throw new IllegalArgumentException("ruleId must not be null");            
         }
@@ -183,28 +188,7 @@ public class MemDefinitionsServiceImpl implements DefinitionsService {
         }
 
         File initFolder = new File(folder);
-        
-        /*
-            Rules initialization
-            
-            TODO No rules initialization, on this approach rules will be infered from data
-                    
-        File rules = new File(initFolder, "rules");
-        if (rules.exists() && rules.isDirectory()) {
-            for (File rule : rules.listFiles()) {
-                String ruleId = rule.getName();
-                try {
-                    String ruleContent = new String(Files.readAllBytes(Paths.get(rule.toURI())), "UTF-8");
-                    this.rules.put(ruleId, ruleContent);
-                } catch (IOException e) {
-                    LOG.error(e.toString(), e);    
-                }
-            }
-        } else {
-            LOG.error("rules folder not found. Skipping rules initialization.");
-        }
-        */
-        
+
         /*
             Triggers
          */

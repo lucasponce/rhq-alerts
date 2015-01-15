@@ -11,10 +11,15 @@ angular.module('alertsApp.services', [])
         var reload = function() {
             return Restangular.one('reload').get();
         }
+
+        var clear = function() {
+            return Restangular.one('clear').get();
+        }
         
         return {
             getAlerts: getAlerts,
-            reload: reload
+            reload: reload,
+            clear: clear
         };
 
     }])
@@ -86,14 +91,9 @@ angular.module('alertsApp.services', [])
             return Restangular.one('rules', ruleId).get();
         }
 
-        var newRule = function(newRule) {
-            return rules.post(newRule);
-        }        
-        
         return  {
             getRules: getRules,
-            getRule: getRule,
-            newRule: newRule
+            getRule: getRule
         };
 
     }]);

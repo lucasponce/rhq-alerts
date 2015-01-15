@@ -77,6 +77,7 @@ public class AlertsHandler {
         if (trigger != null && trigger.getId() != null && definitionsService.getTrigger(trigger.getId()) == null) {
             LOG.debug("POST - createTrigger - triggerId " + trigger.getId());
             definitionsService.addTrigger(trigger);
+            alertsService.reload();
             response.resume(Response.status(Response.Status.OK).entity(trigger).type(APPLICATION_JSON_TYPE).build());
         } else {
             LOG.debug("POST - createTrigger - ID not valid or existing trigger");
@@ -123,6 +124,7 @@ public class AlertsHandler {
             LOG.debug("PUT - updateTrigger - triggerId: " + triggerId);
             definitionsService.removeTrigger(triggerId);
             definitionsService.addTrigger(trigger);
+            alertsService.updateTrigger(trigger);
             response.resume(Response.status(Response.Status.OK).build());
         } else {
             LOG.debug("PUT - updateTrigger - triggerId: " + triggerId + " not found or invalid. ");
@@ -141,6 +143,7 @@ public class AlertsHandler {
         if (triggerId != null && !triggerId.isEmpty() && definitionsService.getTrigger(triggerId) != null) {
             LOG.debug("DELETE - deleteTrigger - triggerId: " + triggerId);
             definitionsService.removeTrigger(triggerId);
+            alertsService.reload();
             response.resume(Response.status(Response.Status.OK).build());
         } else {
             LOG.debug("DELETE - deleteTrigger - triggerId: " + triggerId + " not found or invalid. ");
@@ -180,6 +183,7 @@ public class AlertsHandler {
             LOG.debug("POST - createThreshold - triggerId " + threshold.getTriggerId() + 
                               " - metricId " + threshold.getMetricId());
             definitionsService.addThreshold(threshold);
+            alertsService.reload();
             response.resume(Response.status(Response.Status.OK).entity(threshold).type(APPLICATION_JSON_TYPE).build());
         } else {
             LOG.debug("POST - createThreshold - ID not valid or existing threshold");
@@ -232,6 +236,7 @@ public class AlertsHandler {
             LOG.debug("PUT - updateThreshold - triggerId: " + triggerId + " metricId: " + metricId);
             definitionsService.removeThreshold(triggerId, metricId);
             definitionsService.addThreshold(threshold);
+            alertsService.reload();
             response.resume(Response.status(Response.Status.OK).build());
         } else {
             LOG.debug("PUT - updateThreshold - triggerId: " + triggerId + " - metricId: " + metricId + 
@@ -255,6 +260,7 @@ public class AlertsHandler {
                     definitionsService.getThreshold(triggerId, metricId) != null) {
             LOG.debug("DELETE - deleteThreshold - triggerId: " + triggerId + " metricId: " + metricId);
             definitionsService.removeThreshold(triggerId, metricId);
+            alertsService.reload();
             response.resume(Response.status(Response.Status.OK).build());
         } else {
             LOG.debug("DELETE - deleteThreshold - triggerId: " + triggerId + " - metricId: " + metricId + 
@@ -289,27 +295,6 @@ public class AlertsHandler {
             response.resume(Response.status(Response.Status.OK).entity(rulesList).type(APPLICATION_JSON_TYPE).build());
         }
     }
-    
-    @POST
-    @Path("/rules")
-    @Consumes(APPLICATION_JSON)
-    @Produces(APPLICATION_JSON)
-    public void createRule(@Suspended final AsyncResponse response, final Map<String, String> rule) {
-        /*
-            TODO Add support for ListenableFuture and Futures in the main APIs
-         */
-        if (rule != null && rule.get("id") != null &&
-                    definitionsService.getRule(rule.get("id")) == null) {
-            LOG.debug("POST - createRule - id " + rule.get("id"));
-            definitionsService.addRule(rule.get("id"), rule.get("rule"));
-            response.resume(Response.status(Response.Status.OK).entity(rule).type(APPLICATION_JSON_TYPE).build());
-        } else {
-            LOG.debug("POST - createRule - ID not valid or existing rule");
-            Map<String, String> errors = new HashMap<String, String>();
-            errors.put("errorMsg", "Existing rule or invalid ID");
-            response.resume(Response.status(Response.Status.BAD_REQUEST).entity(errors).type(APPLICATION_JSON_TYPE).build());
-        }
-    }
 
     @GET
     @Path("/rules/{ruleId}")
@@ -335,54 +320,28 @@ public class AlertsHandler {
             response.resume(Response.status(Response.Status.NOT_FOUND).entity(errors).type(APPLICATION_JSON_TYPE).build());
         }
     }
-    
-    @PUT
-    @Path("/rules/{ruleId}")
-    @Consumes(APPLICATION_JSON)
-    public void updateRule(@Suspended final AsyncResponse response, @PathParam("ruleId") final String ruleId,
-                                final Map<String, String> rule) {
-        /*
-            TODO Add support for ListenableFuture and Futures in the main APIs
-         */
-        if (ruleId != null && !ruleId.isEmpty() &&
-                    rule.get("id") != null && rule.get("id").equals(ruleId) &&
-                    definitionsService.getRule(ruleId) != null) {
-            LOG.debug("PUT - updateRule - ruleId: " + ruleId );
-            definitionsService.removeRule(ruleId);
-            definitionsService.addRule(ruleId, rule.get("rule"));
-            response.resume(Response.status(Response.Status.OK).build());
-        } else {
-            LOG.debug("PUT - updateRule - ruleId: " + ruleId + " not found or invalid. ");
-            Map<String, String> errors = new HashMap<String, String>();
-            errors.put("errorMsg", "Rule ruleId: " + ruleId + " not found or invalid ID");
-            response.resume(Response.status(Response.Status.NOT_FOUND).entity(errors).type(APPLICATION_JSON_TYPE).build());
-        }
-    }
-    
-    @DELETE
-    @Path("/rules/{ruleId}")
-    public void deleteRule(@Suspended final AsyncResponse response, @PathParam("ruleId") final String ruleId) {
-        /*
-            TODO Add support for ListenableFuture and Futures in the main APIs
-         */
-        if (ruleId != null && !ruleId.isEmpty() &&
-                    definitionsService.getRule(ruleId) != null) {
-            LOG.debug("DELETE - deleteRule - ruleId: " + ruleId);
-            definitionsService.removeRule(ruleId);
-            response.resume(Response.status(Response.Status.OK).build());
-        } else {
-            LOG.debug("DELETE - deleteRule - ruleId: " + ruleId + " not found or invalid. ");
-            Map<String, String> errors = new HashMap<String, String>();
-            errors.put("errorMsg", "Rule ruleId: " + ruleId + " not found or invalid ID");
-            response.resume(Response.status(Response.Status.NOT_FOUND).entity(errors).type(APPLICATION_JSON_TYPE).build());
-        }
-    }
-    
+
     @GET
     @Path("/reload")
     public void reloadAlerts(@Suspended final AsyncResponse response) {
+        /*
+            TODO Add support for ListenableFuture and Futures in the main APIs
+         */        
+        LOG.debug("GET - reloadAlerts()");
         alertsService.reload();
         response.resume(Response.status(Response.Status.OK).build());
     }
+    
+    @GET
+    @Path("/clear")
+    public void clearAlerts(@Suspended final AsyncResponse response) {
+        /*
+            TODO Add support for ListenableFuture and Futures in the main APIs
+         */
+        LOG.debug("GET - clearAlerts()");
+        alertsService.clear();
+        response.resume(Response.status(Response.Status.OK).build());
+    }
+
     
 }

@@ -25,8 +25,9 @@ public interface DefinitionsService {
     Collection<Trigger> getTriggers();
     Trigger getTrigger(String triggerId);
     
-    void addRule(String ruleId, String rule);
-    void removeRule(String ruleId);
+    /*
+        Rules will be generated
+     */
     String getRule(String ruleId);
     Map<String, String> getRules();
 

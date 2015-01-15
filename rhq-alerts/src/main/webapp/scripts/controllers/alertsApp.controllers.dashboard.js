@@ -69,9 +69,23 @@ angular.module('alertsApp.controllers.dashboard', ['alertsApp.services'])
         }
 
         $scope.reloadDefinitions = function() {
-            $log.log("reloadDefinitions()");
             alertsService.reload().then(function() {
                 
+            }, function error(reason) {
+                var newAlert = {type: 'danger'};
+                if (reason.data.errorMsg) {
+                    newAlert.msg = reason.data.errorMsg;
+                } else {
+                    newAlert.msg = reason.statusText;
+                }
+                $scope.alertsErrors.push(newAlert);
+            });
+        }
+        
+        $scope.clearAlerts = function() {
+            alertsService.clear().then(function() {
+                $scope.legend = undefined;
+                Dashboard.clear();
             }, function error(reason) {
                 var newAlert = {type: 'danger'};
                 if (reason.data.errorMsg) {

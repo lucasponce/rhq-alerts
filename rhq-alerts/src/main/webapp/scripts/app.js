@@ -57,10 +57,6 @@ angular.module('alertsApp').config(function ($stateProvider) {
         url: '/rules/:id/view',
         templateUrl: 'views/rule-view.html',
         controller: 'RulesViewCtrl'
-    }).state('newRule', {
-        url: '/rules/new',
-        templateUrl: 'views/rule-new.html',
-        controller: 'RulesNewCtrl'
     });
 
 }).config(function(RestangularProvider) {

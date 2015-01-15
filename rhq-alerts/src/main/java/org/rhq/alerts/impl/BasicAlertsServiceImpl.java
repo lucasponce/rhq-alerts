@@ -88,11 +88,8 @@ public class BasicAlertsServiceImpl implements AlertsService {
             for (Object fact : cep.getFacts(t)) {
                 Trigger trigger = (Trigger)fact;
                 if (trigger.getId().equals(t.getId())) {
-                    /*
-                        Status only
-                     */
-                    trigger.setActive(t.isActive());
-                    cep.updateFact(trigger);
+                    cep.removeFact(trigger);
+                    cep.addFact(t);
                     return;
                 }
             }
